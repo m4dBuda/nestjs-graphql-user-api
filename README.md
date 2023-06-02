@@ -28,8 +28,12 @@
 
 ## Installation
 
+Remember to define your ambient variables in your .env file to ensure that prisma will be capable of running the migrations and generate your database.
+
 ```bash
 $ npm install
+
+$ npx prisma migrate dev
 ```
 
 ## Running the app

@@ -1,6 +1,6 @@
 
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { AppUserService } from '../../app/appUser/app.service';
+import { AppUserService } from '../services/app.service';
 import { CreateAppUserDto } from '../dto/create-appUser.dto';
 
 @Controller('app')

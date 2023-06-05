@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../../prisma/prisma.service';
 import { compareSync } from 'bcrypt';
 import { ResponseHelper } from '../helpers/response.helpers';
 import { TokenService } from './token.service';

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../../prisma/prisma.service';
 import { compareSync, hashSync } from 'bcrypt';
 import { ResponseHelper } from '../helpers/response.helpers';
-import { CreateUserDto } from '../dto/appUser/createAppUser.dto';
-import { UpdateUserDto } from '../dto/appUser/UpdateAppUser.dto';
-import { UpdateUserPasswordDto } from 'src/dto/appUser/updateUserPassword.dto';
+import { CreateUserDto } from '../dto/createAppUser.dto';
+import { UpdateUserDto } from '../dto/updateAppUser.dto';
+import { UpdateUserPasswordDto } from '../dto/updateUserPassword.dto';
 
 @Injectable()
 export class AppUserService {

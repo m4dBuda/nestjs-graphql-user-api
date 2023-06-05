@@ -24,8 +24,11 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript self-learning repository.
+[Nest](https://github.com/nestjs/nest)
 
+This is a project that i made to train and learn nest.js by myself.
+
+The API/Microservice simple provides a CRUD for users, it includes a login call and a change-password call aswell.
 ## Installation
 
 Remember to define your ambient variables in your .env file to ensure that prisma will be capable of running the migrations and generate your database.
@@ -40,13 +43,8 @@ $ npx prisma migrate dev
 
 ```bash
 # development
-$ npm run start
+$ nest start
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
@@ -54,12 +52,6 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 ## Support

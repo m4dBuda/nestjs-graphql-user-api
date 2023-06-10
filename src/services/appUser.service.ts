@@ -1,165 +1,142 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { compareSync, hashSync } from 'bcrypt';
-import { ResponseHelper } from '../helpers/response.helpers';
-import { CreateUserDto } from '../dto/appUser/createAppUser.dto';
-import { UpdateUserDto } from '../dto/appUser/UpdateAppUser.dto';
-import { UpdateUserPasswordDto } from 'src/dto/appUser/updateUserPassword.dto';
+import { CreateUserDto } from '../dto/createAppUser.dto';
+import { UpdateUserDto } from '../dto/updateAppUser.dto';
+import { UpdateUserPasswordDto } from '../dto/updateUserPassword.dto';
+import {
+  UserNotFoundException,
+  UserAlreadyExistsException,
+  InvalidPasswordException,
+} from '../exceptions/exception.helpers';
 
 @Injectable()
 export class AppUserService {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async getAllUsers(): Promise<any> {
+    const users = await this.prisma.appUser.findMany({
+      include: { userType: { select: { type: true } } },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+
+    const formattedUsers = users.map((user) => ({
+      ...user,
+      type: user.userType ? user.userType.type : null,
+      userType: undefined,
+    }));
+
+    return formattedUsers;
   }
 
-  async getAllUsers() {
-    try {
-      const users = await this.prisma.appUser.findMany({
-        include: { userType: { select: { type: true } } },
-        orderBy: {
-          id: 'asc',
-        },
-      });
-  
-      const formattedUsers = users.map((user) => ({
-        ...user,
-        type: user.userType?.type,
-        userType: undefined,
-      }));
-  
-      return ResponseHelper.success(formattedUsers);
-    } catch (error) {
-      return ResponseHelper.error(error.message);
-    }
-  }
-  
+  async getUserById(id: string): Promise<any> {
+    const userId = parseInt(id, 10);
+    const user = await this.prisma.appUser.findFirst({
+      where: { id: userId },
+      include: { userType: true },
+    });
 
-  async getUserById(id: string) {
-    try {
-      const userId = parseInt(id, 10);
-      const user = await this.prisma.appUser.findFirst({
-        where: { id: userId },
-        include: { userType: true },
-      });
-  
-      if (!user) {
-        return ResponseHelper.notFoundError();
-      }
-  
-      const { userType, ...userData } = user;
-      const formattedUser = {
-        ...userData,
-        type: userType?.type,
-      };
-  
-      return ResponseHelper.success(formattedUser);
-    } catch (error) {
-      return ResponseHelper.error(error.message);
-    }
-  }
-  
-  
-
-  async createUser(userData: CreateUserDto) {
-    try {
-      const existingUser = await this.prisma.appUser.findFirst({
-        where: { email: userData.email },
-      });
-      
-      if (existingUser) {
-        return ResponseHelper.error('Email já cadastrado');
-      }
-
-      const hashedPassword = hashSync(userData.password, 10);
-
-      const newUser = await this.prisma.appUser.create({
-        data: {
-          name: userData.name,
-          password: hashedPassword,
-          email: userData.email,
-          idUserType: userData.idUserType,
-        },
-      });
-
-      return ResponseHelper.created(newUser);
-    } catch (error) {
-      return ResponseHelper.error(error.message);
+    if (user) {
+      return user;
+    } else {
+      throw new UserNotFoundException();
     }
   }
 
-  async updateUserById(id: string, userData: UpdateUserDto) {
-    try {
-      const userId = parseInt(id, 10);
+  async createUser(userData: CreateUserDto): Promise<any> {
+    const existingUser = await this.prisma.appUser.findFirst({
+      where: { email: userData.email },
+    });
 
-      const user = await this.prisma.appUser.findFirst({
-        where: { id: userId },
-      });
-      
-      if (!user) {
-        return ResponseHelper.notFoundError();
-      }
-      
-      const updatedUser = await this.prisma.appUser.update({
-        where: { id: userId },
-        data: {
-          name: userData.name,
-          email: userData.email,
-          idUserType: userData.idUserType,
-        },
-      });
-
-      return ResponseHelper.success(updatedUser);
-    } catch (error) {
-      return ResponseHelper.error(error.message);
+    if (existingUser) {
+      throw new UserAlreadyExistsException();
     }
-  }
-  async updateUserPassword(id: string, userData: UpdateUserPasswordDto) {
-    try {
-      const userId = parseInt(id, 10);
 
-      const existingUser = await this.prisma.appUser.findFirst({
-        where: { id: userId },
-      });
-      
-      if (!existingUser) {
-        return ResponseHelper.notFoundError();
-      }
+    const hashedPassword = hashSync(userData.password, 10);
 
-      const isPasswordCorrect = compareSync(userData.password, existingUser.password);
-      if (!isPasswordCorrect) {
-        return ResponseHelper.error('Senha incorreta');
-      }
-      const hashedPassword = hashSync(userData.newPassword, 10);
+    const newUser = await this.prisma.appUser.create({
+      data: {
+        name: userData.name,
+        password: hashedPassword,
+        email: userData.email,
+        idUserType: userData.idUserType,
+      },
+    });
 
-      const updatedUser = await this.prisma.appUser.update({
-        where: { id: userId },
-        data: { password: hashedPassword},
-      });
-
-      return ResponseHelper.success(updatedUser);
-    } catch (error) {
-      return ResponseHelper.error(error.message);
-    }
+    return newUser;
   }
 
-  async deleteUserById(id: string) {
-    try {
-      const userId = parseInt(id, 10);
+  async updateUserById(id: string, userData: UpdateUserDto): Promise<any> {
+    const userId = parseInt(id, 10);
 
-      const user = await this.prisma.appUser.findFirst({
-        where: { id: userId },
-      });
-      
-      if (!user) {
-        return ResponseHelper.notFoundError();
-      }
+    const user = await this.prisma.appUser.findFirst({
+      where: { id: userId },
+    });
 
-      const deletedUser = await this.prisma.appUser.delete({
-        where: { id: userId },
-      });
-
-      return ResponseHelper.success(deletedUser);
-    } catch (error) {
-      return ResponseHelper.error(error.message);
+    if (!user) {
+      throw new UserNotFoundException();
     }
+
+    const updatedUser = await this.prisma.appUser.update({
+      where: { id: userId },
+      data: {
+        name: userData.name,
+        email: userData.email,
+        idUserType: userData.idUserType,
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async updateUserPassword(
+    id: string,
+    userData: UpdateUserPasswordDto,
+  ): Promise<any> {
+    const userId = parseInt(id, 10);
+
+    const existingUser = await this.prisma.appUser.findFirst({
+      where: { id: userId },
+    });
+
+    if (!existingUser) {
+      throw new UserNotFoundException();
+    }
+
+    const isPasswordCorrect = compareSync(
+      userData.password,
+      existingUser.password,
+    );
+    if (!isPasswordCorrect) {
+      throw new InvalidPasswordException();
+    }
+    const hashedPassword = hashSync(userData.newPassword, 10);
+
+    const updatedUser = await this.prisma.appUser.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    return updatedUser;
+  }
+
+  async deleteUserById(id: string): Promise<any> {
+    const userId = parseInt(id, 10);
+
+    const user = await this.prisma.appUser.findFirst({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    const deletedUser = await this.prisma.appUser.delete({
+      where: { id: userId },
+    });
+
+    return deletedUser;
   }
 }

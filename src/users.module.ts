@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 import { resolvers, services } from './resolvers-and-services';
 
 @Module({
@@ -10,11 +13,8 @@ import { resolvers, services } from './resolvers-and-services';
       autoSchemaFile: {
         federation: 2,
       },
-    })
+    }),
   ],
-  providers: [
-    ...resolvers, 
-    ...services
-  ],
+  providers: [...resolvers, ...services],
 })
 export class UsersModule {}

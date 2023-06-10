@@ -5,5 +5,6 @@ import { UserLoginService } from './services/userLogin.service';
 import { TokenService } from './services/token.service';
 import { PrismaService } from 'prisma/prisma.service';
 
+
 export const resolvers = [AppUserResolver, UserLoginResolver];
 export const services = [AppUserService, UserLoginService, TokenService, PrismaService];

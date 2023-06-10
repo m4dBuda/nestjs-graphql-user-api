@@ -52,28 +52,9 @@ INSERT INTO
 VALUES
     (
         'João Otávio Carvalho',
-        'j.carvalho@gen.com.br',
-        'senha123',
+        'otavioc.dev@gmail.com',
+        'password123',
         1,
-        now(),
-        now()
-    );
-
-INSERT INTO
-    "AppUser" (
-        "name",
-        "email",
-        "password",
-        "idUserType",
-        "createdAt",
-        "updatedAt"
-    )
-VALUES
-    (
-        'Victor Marques Marca-Passos',
-        'fitness@sem-infartos.com.br',
-        'obesidademata',
-        2,
         now(),
         now()
     );

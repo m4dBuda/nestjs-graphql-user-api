@@ -20,9 +20,11 @@
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
-Languages: Typescript, Shell
-Framework: Nest.js
-General tools, libraries and plus: GraphQL, Apollo, Prisma, PostgresSQL, JsonWebToken, Class-Validator, Bcrypt, DotEnv, Nodemon, CORS
+  Languages: Typescript, Shell
+  
+  Framework: Nest.js
+  
+  General tools, libraries and plus: GraphQL, Apollo, Prisma, PostgresSQL, JsonWebToken, Class-Validator, Bcrypt, DotEnv, Nodemon, CORS
 
 ## Installation
 

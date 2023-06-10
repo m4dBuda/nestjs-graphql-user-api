@@ -24,27 +24,25 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest)
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-This is a project that i made to train and learn nest.js by myself.
-
-The API/Microservice simple provides a CRUD for users, it includes a login call and a change-password call aswell.
 ## Installation
-
-Remember to define your ambient variables in your .env file to ensure that prisma will be capable of running the migrations and generate your database.
 
 ```bash
 $ npm install
-
-$ npx prisma migrate dev
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ nest start
+$ npm run start
 
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
 ```
 
 ## Test
@@ -52,7 +50,24 @@ $ nest start
 ```bash
 # unit tests
 $ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
 ```
 
 ## Support
-- Author - [João Otávio Carvalho](https://www.linkedin.com/in/jo%C3%A3o-ot%C3%A1vio-carvalho-164023151/)
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).
